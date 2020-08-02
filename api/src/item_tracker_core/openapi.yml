@@ -1,0 +1,52 @@
+openapi: 3.0.1
+
+info:
+  title: FoundYoThang
+  version: ""
+
+paths:
+  get:
+    /user_data:
+      description: if user marked public, returns the users contact info
+      operationId: item_tracker_core.handlers.get_user_data
+      parameters:
+        - name: item_tag
+          in: query
+          schema:
+            type: string
+      responses:
+        "200": 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  phone:
+                    type: string
+                  email: 
+                    type: string
+                    format: email
+    post:
+      /tag:
+        description: Adds tag associated to logged in user
+        operationId: item_tracker_core.handlers.add_tag
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                item_name:
+                  type: string
+                item_desc:
+                  type: string
+        responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item_id:
+                    type: string
+      
+    
