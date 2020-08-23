@@ -6,6 +6,7 @@ Parameters:
 
 Resources:
   RestApi:
+    Name: AWS::StackName
     Type: AWS::ApiGateway::RestApi
     Properties:
       EndpointConfiguration:
