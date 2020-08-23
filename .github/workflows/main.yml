@@ -7,7 +7,7 @@ on:
 
 env:
   AWS_REGION: us-west-2
-  TEMPLATE_BUCKET: lambda-templates-fy
+  TEMPLATE_BUCKET: lambda-templates-fyt
 
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
