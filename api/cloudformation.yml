@@ -98,6 +98,11 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/*"
+              - Effect: Allow
+                Action:
                   - dynamodb:PutItem
                   - dynamodb:Query
                 Resource:
@@ -116,3 +121,9 @@ Resources:
       Handler: lambda_handler.handler
       Role: !GetAtt LambdaRole.Arn
       Runtime: python3.8
+
+LambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${Lambda}"
+      RetentionInDays: 90
