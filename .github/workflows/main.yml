@@ -30,10 +30,9 @@ jobs:
           python-version: 3.8
 
       - name: install dependancies
-        working-directory: api
         run: |
           pip install --upgrade pip
-          pip install -r requirements.txt -t src
+          pip install -r api/requirements.txt -t api/src
       - name: Package and deploy
         run: |
           aws cloudformation package \
