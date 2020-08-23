@@ -63,12 +63,6 @@ Resources:
       RestApiId: !Ref RestApi
       DeploymentId: !Ref Deployment
 
-  BasePathMapping:
-    Type: AWS::ApiGateway::BasePathMapping
-    Properties:
-      RestApiId: !Ref RestApi
-      Stage: !Ref Stage
-
   ApiRole:
     Type: AWS::IAM::Role
     Properties:
