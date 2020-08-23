@@ -5,8 +5,8 @@ info:
   version: ""
 
 paths:
-  get:
-    /user_data:
+  /user_data:
+    get:
       description: if user marked public, returns the users contact info
       operationId: item_tracker_core.handlers.get_user_data
       parameters:
@@ -16,6 +16,7 @@ paths:
             type: string
       responses:
         "200": 
+          description: 200 ok
           content:
             application/json:
               schema:
@@ -26,10 +27,11 @@ paths:
                   email: 
                     type: string
                     format: email
+  /tag:
     post:
-      /tag:
-        description: Adds tag associated to logged in user
-        operationId: item_tracker_core.handlers.add_tag
+      description: Adds tag associated to logged in user
+      operationId: item_tracker_core.handlers.add_tag
+      requestBody:
         content:
           application/json:
             schema:
@@ -39,8 +41,9 @@ paths:
                   type: string
                 item_desc:
                   type: string
-        responses:
+      responses:
         "200":
+          description: 200 ok
           content:
             application/json:
               schema:
@@ -48,5 +51,3 @@ paths:
                 properties:
                   item_id:
                     type: string
-      
-    
