@@ -6,9 +6,9 @@ Parameters:
 
 Resources:
   RestApi:
-    Name: !Ref AWS::StackName
     Type: AWS::ApiGateway::RestApi
     Properties:
+      Name: !Ref AWS::StackName
       EndpointConfiguration:
         Types:
           - REGIONAL
