@@ -31,14 +31,14 @@ def get_user_data(item_tag):
 
 
 
-def add_tag(item_name, item_desc):
+def add_tag(body):
     tag_table = DB.Table(environ['TAG_TABLE'])
     item_tag = uuid4()
     new_tag = {
         'item_tag': item_tag,
         'user_id': 'bill',
-        'item_name': item_name,
-        'item_desc': item_desc
+        'item_name': body['item_name'],
+        'item_desc': body['item_desc']
     }
 
     tag_table.put_item(new_tag)
