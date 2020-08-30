@@ -33,7 +33,7 @@ def get_user_data(item_tag):
 
 def add_tag(body):
     tag_table = DB.Table(environ['TAG_TABLE'])
-    item_tag = uuid4()
+    item_tag = str(uuid4())
     new_tag = {
         'item_tag': item_tag,
         'user_id': 'bill',
