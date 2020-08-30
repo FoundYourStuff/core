@@ -41,7 +41,7 @@ def add_tag(body):
         'item_desc': body['item_desc']
     }
 
-    tag_table.put_item(new_tag)
+    tag_table.put_item(Item=new_tag)
     
     return {
         'item_tag': item_tag
