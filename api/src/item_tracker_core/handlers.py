@@ -3,12 +3,12 @@ from uuid import uuid4
 from item_tracker_core import connexion_app, DB
 
 
-def get_user_data(item_tag):
-    tag_table = DB.Table(environ['TAG_TABLE'])
-    user_table = DB.Table(environ['USER_TABLE'])
-    tag_record = tag_table.get_item(
+def getUserData(itemTag):
+    tagTable = DB.Table(environ['TAG_TABLE'])
+    userTable = DB.Table(environ['USER_TABLE'])
+    tagRecord = tagTable.getItem(
         Key={
-            'item_tag': item_tag 
+            'item_tag': itemTag 
         },
         AttributesToGet=[
         'user_id',
@@ -16,10 +16,10 @@ def get_user_data(item_tag):
         'item_name'
         ]
     )
-    user_id = tag_record['Item']['user_id']
-    user_record = user_table.get_item(
+    userId = tagRecord['Item']['user_id']
+    userRecord = userTable.getItem(
         Key={
-            'user_id': user_id 
+            'user_id': userId 
         },
         AttributesToGet=[
         'phone',
@@ -27,24 +27,24 @@ def get_user_data(item_tag):
         'name'
         ]
     )
-    return {'user_record': user_record['Item'], 'tag_record': tag_record['Item']}
+    return {'user_record': userRecord['Item'], 'tag_record': tagRecord['Item']}
 
 
 
-def add_tag(body):
-    tag_table = DB.Table(environ['TAG_TABLE'])
-    item_tag = str(uuid4())
-    new_tag = {
-        'item_tag': item_tag,
+def addTag(body):
+    tagTable = DB.Table(environ['TAG_TABLE'])
+    itemTag = str(uuid4())
+    newTag = {
+        'item_tag': itemTag,
         'user_id': 'bill',
         'item_name': body['item_name'],
         'item_desc': body['item_desc']
     }
 
-    tag_table.put_item(Item=new_tag)
+    tagTable.putItem(Item=newTag)
     
     return {
-        'item_tag': item_tag
+        'item_tag': itemTag
     }
 
 connexion_app.add_api('openapi.yml')
