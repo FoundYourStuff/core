@@ -2,7 +2,8 @@ import os
 import psycopg2
 
 #$Env:DATABASE_URL = $(heroku config:get DATABASE_URL -a found-your-stuff-api);  py.exe handlers.py
-
+os.environ['DATABASE_URL'] = os.popen("heroku config:get DATABASE_URL -a found-your-stuff-api").read().strip() #seems jank
+print(os.environ['DATABASE_URL'])
 DATABASE_URL = os.environ['DATABASE_URL']
 
 conn = None
