@@ -1,6 +1,4 @@
 connexion[swagger-ui]
 serverless_wsgi
 psycopg2-binary
-flask
-Flask-SQLAlchemy
-gunicorn
+sqlalchemy
