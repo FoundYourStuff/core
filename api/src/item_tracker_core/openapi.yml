@@ -5,10 +5,10 @@ info:
   version: ""
 
 paths:
-  /user_data:
+  /users:
     get:
       description: if user marked public, returns the users contact info
-      operationId: item_tracker_core.handlers.get_user_data
+      operationId: item_tracker_core.handlers.getUserByTag
       parameters:
         - name: item_tag
           in: query
@@ -27,6 +27,66 @@ paths:
                   email: 
                     type: string
                     format: email
+    post:
+      description: create new user
+      operationId: item_tracker_core.handlers.createNewUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200": 
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/{userId}:
+    get:
+      description: get user by GUID
+      operationId: item_tracker_core.handlers.getUserById
+      parameters:
+        - name: userId
+          in: path
+          description: GUID of user to update
+          required: true
+          schema:
+            type: string
+            format: GUID
+      responses:
+        "200": 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              
+
+    patch:
+      description: update existing user
+      operationId: item_tracker_core.handlers.updateUserById
+      parameters:
+        - name: userId
+          in: path
+          description: GUID of user to update
+          required: true
+          schema:
+            type: string
+            format: GUID
+      requestBody:
+        required: true
+        content:
+          application'json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200": 
+          description: Updated
+
+
+      
   /tag:
     post:
       description: Adds tag associated to logged in user
@@ -51,3 +111,34 @@ paths:
                 properties:
                   item_id:
                     type: string
+
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - email
+        - password
+        - phone_number
+        - contact
+        - active
+        - name
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        phone_number:
+          type: string
+        contact:
+          type: boolean
+        active: 
+          type: boolean
+        name:
+          type: string
+          minLength: 3
+      
+      
