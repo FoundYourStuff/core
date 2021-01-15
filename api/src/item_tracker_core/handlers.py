@@ -1,50 +1,31 @@
-from os import environ
-from uuid import uuid4
-from item_tracker_core import connexion_app, DB
+import os
+import psycopg2
+import sqlalchemy
 
 
-def get_user_data(item_tag):
-    tag_table = DB.Table(environ['TAG_TABLE'])
-    user_table = DB.Table(environ['USER_TABLE'])
-    tag_record = tag_table.get_item(
-        Key={
-            'item_tag': item_tag 
-        },
-        AttributesToGet=[
-        'user_id',
-        'item_desc',
-        'item_name'
-        ]
-    )
-    user_id = tag_record['Item']['user_id']
-    user_record = user_table.get_item(
-        Key={
-            'user_id': user_id 
-        },
-        AttributesToGet=[
-        'phone',
-        'email',
-        'name'
-        ]
-    )
-    return {'user_record': user_record['Item'], 'tag_record': tag_record['Item']}
+#$Env:DATABASE_URL = $(heroku config:get DATABASE_URL -a found-your-stuff-api);  py.exe handlers.py
 
+if not os.environ['DATABASE_URL']:
+    os.environ['DATABASE_URL'] = os.popen("heroku config:get DATABASE_URL -a found-your-stuff-api").read().strip() #seems jank
 
+print(os.environ['DATABASE_URL'])
+DATABASE_URL = os.environ['DATABASE_URL']
+db = sqlalchemy.create_engine(DATABASE_URL)
+db.execute("INSERT INTO users (email, password, phone_number, contact, name, active) VALUES ('abc@gmail.com', 'abc', 1234, true, 'salvador dali', false)")
 
-def add_tag(body):
-    tag_table = DB.Table(environ['TAG_TABLE'])
-    item_tag = str(uuid4())
-    new_tag = {
-        'item_tag': item_tag,
-        'user_id': 'bill',
-        'item_name': body['item_name'],
-        'item_desc': body['item_desc']
-    }
+# conn = None
+# try:
+#     conn = psycopg2.connect(DATABASE_URL)
+#     cur = conn.cursor()
+#     print('PostgreSQL database version:')
+#     cur.execute('SELECT version()')
+#     db_version = cur.fetchone()
+#     print(db_version)
+#     cur.close()
+# except Exception as error:
+#     print('Cause: {}'.format(error))
 
-    tag_table.put_item(Item=new_tag)
-    
-    return {
-        'item_tag': item_tag
-    }
-
-connexion_app.add_api('openapi.yml')
+# finally:
+#     if conn is not None:
+#         conn.close()
+#         print('Closed DB')
