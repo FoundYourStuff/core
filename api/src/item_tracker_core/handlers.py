@@ -1,10 +1,13 @@
-import os 
+import os
 import psycopg2
 import sqlalchemy
 
 
 #$Env:DATABASE_URL = $(heroku config:get DATABASE_URL -a found-your-stuff-api);  py.exe handlers.py
-os.environ['DATABASE_URL'] = os.popen("heroku config:get DATABASE_URL -a found-your-stuff-api").read().strip() #seems jank
+
+if not os.environ['DATABASE_URL']:
+    os.environ['DATABASE_URL'] = os.popen("heroku config:get DATABASE_URL -a found-your-stuff-api").read().strip() #seems jank
+
 print(os.environ['DATABASE_URL'])
 DATABASE_URL = os.environ['DATABASE_URL']
 db = sqlalchemy.create_engine(DATABASE_URL)
@@ -26,5 +29,3 @@ db.execute("INSERT INTO users (email, password, phone_number, contact, name, act
 #     if conn is not None:
 #         conn.close()
 #         print('Closed DB')
-
-
