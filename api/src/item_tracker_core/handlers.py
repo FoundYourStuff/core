@@ -1,17 +1,33 @@
 import os
 import psycopg2
-import sqlalchemy
+from sqlalchemy import create_engine, Table, Column, String, MetaData, Integer, Boolean, Sequence, BigInteger, LargeBinary, ForeignKey
 
 
 #$Env:DATABASE_URL = $(heroku config:get DATABASE_URL -a found-your-stuff-api);  py.exe handlers.py
 
-if not os.environ['DATABASE_URL']:
+if os.getenv('DATABASE_URL') is None:
     os.environ['DATABASE_URL'] = os.popen("heroku config:get DATABASE_URL -a found-your-stuff-api").read().strip() #seems jank
-
-print(os.environ['DATABASE_URL'])
 DATABASE_URL = os.environ['DATABASE_URL']
-db = sqlalchemy.create_engine(DATABASE_URL)
-db.execute("INSERT INTO users (email, password, phone_number, contact, name, active) VALUES ('abc@gmail.com', 'abc', 1234, true, 'salvador dali', false)")
+db = create_engine(DATABASE_URL, echo=True)
+
+meta = MetaData()
+users = Table('users', meta,
+                    Column('id', Integer, primary_key=True),
+                    Column('email', String, nullable=False),
+                    Column('password', String, nullable=False),
+                    Column('name', String),
+                    Column('phone_number', BigInteger),
+                    Column('contact', Boolean, nullable=False),
+                    Column('active', Boolean, nullable=False))
+
+tags = Table('tags', meta,
+                    Column('id', Integer, primary_key=True),
+                    Column('user_id',Integer, ForeignKey("users.id"), nullable=False),
+                    Column('name', String),
+                    Column('picture', LargeBinary))
+
+meta.create_all(db)
+# db.execute("INSERT INTO users (email, password, phone_number, contact, name, active) VALUES ('abc@gmail.com', 'abc', 1234, true, 'salvador dali', false)")
 
 # conn = None
 # try:
