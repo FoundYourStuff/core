@@ -25,7 +25,8 @@ tags = Table('tags', meta,
                     Column('id', Integer, primary_key=True),
                     Column('user_id',Integer, ForeignKey("users.id"), nullable=False),
                     Column('name', String),
-                    Column('picture', LargeBinary))
+                    Column('picture', LargeBinary)
+                    Column('active', Boolean, nullable=False))
 
 messages = Table('messages', meta,
                     Column('id', BigInteger, primary_key=True),
