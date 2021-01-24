@@ -1,6 +1,7 @@
 import os
 import psycopg2
 from sqlalchemy import create_engine, Table, Column, String, MetaData, Integer, Boolean, Sequence, BigInteger, LargeBinary, ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
 
 
 #$Env:DATABASE_URL = $(heroku config:get DATABASE_URL -a found-your-stuff-api);  py.exe handlers.py
@@ -25,6 +26,13 @@ tags = Table('tags', meta,
                     Column('user_id',Integer, ForeignKey("users.id"), nullable=False),
                     Column('name', String),
                     Column('picture', LargeBinary))
+
+messages = Table('messages', meta,
+                    Column('id', BigInteger, primary_key=True),
+                    Column('tag_id',Integer, ForeignKey("tags.id"), nullable=False),
+                    Column('body', String, nullable=False),
+                    Column('picture', LargeBinary),
+                    Column('read', Boolean, nullable=False))
 
 meta.create_all(db)
 # db.execute("INSERT INTO users (email, password, phone_number, contact, name, active) VALUES ('abc@gmail.com', 'abc', 1234, true, 'salvador dali', false)")
