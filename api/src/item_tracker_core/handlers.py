@@ -1,6 +1,6 @@
 import os
 import psycopg2
-from sqlalchemy import create_engine, Table, Column, String, MetaData, Integer, Boolean, Sequence, BigInteger, LargeBinary, ForeignKey
+from sqlalchemy import create_engine, Table, Column, String, MetaData, Integer, Boolean, Sequence, BigInteger, LargeBinary, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 
 
@@ -30,6 +30,7 @@ tags = Table('tags', meta,
 messages = Table('messages', meta,
                     Column('id', BigInteger, primary_key=True),
                     Column('tag_id',Integer, ForeignKey("tags.id"), nullable=False),
+                    Column('time_stamp', DateTime, nullable=False),
                     Column('body', String, nullable=False),
                     Column('picture', LargeBinary),
                     Column('read', Boolean, nullable=False))
