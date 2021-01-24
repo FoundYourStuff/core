@@ -11,32 +11,61 @@ if os.getenv('DATABASE_URL') is None:
 DATABASE_URL = os.environ['DATABASE_URL']
 db = create_engine(DATABASE_URL, echo=True)
 
-meta = MetaData()
-users = Table('users', meta,
-                    Column('id', Integer, primary_key=True),
-                    Column('email', String, nullable=False),
-                    Column('password', String, nullable=False),
-                    Column('name', String),
-                    Column('phone_number', BigInteger),
-                    Column('contact', Boolean, nullable=False),
-                    Column('active', Boolean, nullable=False))
+Base = declarative_base()
 
-tags = Table('tags', meta,
-                    Column('id', Integer, primary_key=True),
-                    Column('user_id',Integer, ForeignKey("users.id"), nullable=False),
-                    Column('name', String),
-                    Column('picture', LargeBinary)
-                    Column('active', Boolean, nullable=False))
+class User(Base):
+    __tablename__='users'
+    id = Column('id', Integer, primary_key=True)
+    email = Column('email', String, nullable=False)
+    password = Column('password', String, nullable=False)
+    name = Column('name', String)
+    phoneNumber = Column('phone_number', BigInteger)
+    contact = Column('contact', Boolean, nullable=False)
+    active = Column('active', Boolean, nullable=False)
 
-messages = Table('messages', meta,
-                    Column('id', BigInteger, primary_key=True),
-                    Column('tag_id',Integer, ForeignKey("tags.id"), nullable=False),
-                    Column('time_stamp', DateTime, nullable=False),
-                    Column('body', String, nullable=False),
-                    Column('picture', LargeBinary),
-                    Column('read', Boolean, nullable=False))
+class Tag(Base):
+    __tablename__="tags"
+    id = Column('id', Integer, primary_key=True)
+    userID = Column('user_id',Integer, ForeignKey("users.id"), nullable=False)
+    name = Column('name', String)
+    picture = Column('picture', LargeBinary)
+    active = Column('active', Boolean, nullable=False)
 
-meta.create_all(db)
+class Message(Base):
+    __tablename__="messages"
+    id = Column('id', BigInteger, primary_key=True)
+    tagID = Column('tag_id',Integer, ForeignKey("tags.id"), nullable=False)
+    timeStamp = Column('time_stamp', DateTime, nullable=False)
+    body = Column('body', String, nullable=False)
+    picture = Column('picture', LargeBinary)
+    read = Column('read', Boolean, nullable=False)
+
+# meta = MetaData()
+# users = Table('users', meta,
+#                     Column('id', Integer, primary_key=True),
+#                     Column('email', String, nullable=False),
+#                     Column('password', String, nullable=False),
+#                     Column('name', String),
+#                     Column('phone_number', BigInteger),
+#                     Column('contact', Boolean, nullable=False),
+#                     Column('active', Boolean, nullable=False))
+
+# tags = Table('tags', meta,
+#                     Column('id', Integer, primary_key=True),
+#                     Column('user_id',Integer, ForeignKey("users.id"), nullable=False),
+#                     Column('name', String),
+#                     Column('picture', LargeBinary)
+#                     Column('active', Boolean, nullable=False))
+
+# messages = Table('messages', meta,
+#                     Column('id', BigInteger, primary_key=True),
+#                     Column('tag_id',Integer, ForeignKey("tags.id"), nullable=False),
+#                     Column('time_stamp', DateTime, nullable=False),
+#                     Column('body', String, nullable=False),
+#                     Column('picture', LargeBinary),
+#                     Column('read', Boolean, nullable=False))
+
+# meta.create_all(db)
 # db.execute("INSERT INTO users (email, password, phone_number, contact, name, active) VALUES ('abc@gmail.com', 'abc', 1234, true, 'salvador dali', false)")
 
 # conn = None
