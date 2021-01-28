@@ -2,6 +2,7 @@ import os
 import psycopg2
 from sqlalchemy import create_engine, Table, Column, String, MetaData, Integer, Boolean, Sequence, BigInteger, LargeBinary, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 
 #$Env:DATABASE_URL = $(heroku config:get DATABASE_URL -a found-your-stuff-api);  py.exe handlers.py
@@ -10,7 +11,8 @@ if os.getenv('DATABASE_URL') is None:
     os.environ['DATABASE_URL'] = os.popen("heroku config:get DATABASE_URL -a found-your-stuff-api").read().strip() #seems jank
 DATABASE_URL = os.environ['DATABASE_URL']
 db = create_engine(DATABASE_URL, echo=True)
-
+Session = sessionmaker(bind=db)
+session = Session()
 Base = declarative_base()
 
 class User(Base):
@@ -44,3 +46,11 @@ def createTables():
     Base.metadata.create_all(db)
 
 createTables()
+
+
+def getUserByTagId(tagId):
+    currentTag = session.query(Tag).get(tagId)
+    print(currentTag.name)
+
+
+getUserByTagId(1)

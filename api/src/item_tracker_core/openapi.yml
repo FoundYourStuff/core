@@ -1,16 +1,16 @@
 openapi: 3.0.1
 
 info:
-  title: FoundYoThang
+  title: FoundYourStuff
   version: ""
 
 paths:
   /users:
     get:
       description: if user marked public, returns the users contact info
-      operationId: item_tracker_core.handlers.getUserByTag
+      operationId: item_tracker_core.handlers.getUserByTagId
       parameters:
-        - name: item_tag
+        - name: tag_id
           in: query
           schema:
             type: string
@@ -120,10 +120,10 @@ components:
       required:
         - email
         - password
+        - name
         - phone_number
         - contact
         - active
-        - name
       properties:
         email:
           type: string
@@ -131,14 +131,47 @@ components:
         password:
           type: string
           format: password
+        name:
+          type: string
         phone_number:
           type: string
         contact:
           type: boolean
         active: 
           type: boolean
+    Tag:
+      type: object
+      required:
+        - user_id
+        - name
+        - active
+      properties:
+        user_id:
+          type: string
         name:
           type: string
-          minLength: 3
+        picture:
+          type: string
+        active:
+          type: boolean
+    Message:
+      type: object
+      required:
+        - tag_id
+        - time_stamp
+        - body
+        - read
+      properties:
+        tag_id:
+          type: string
+        time_stamp:
+          type: string
+        body:
+          type: string
+        picture:
+          type: string
+        read:
+          type: boolean
+
       
       
