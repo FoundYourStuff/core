@@ -50,7 +50,8 @@ createTables()
 
 def getUserByTagId(tagId):
     currentTag = session.query(Tag).get(tagId)
-    print(currentTag.name)
+    user = session.query(User).get(currentTag.userID)
+    print(user.name)
 
 
 getUserByTagId(1)
