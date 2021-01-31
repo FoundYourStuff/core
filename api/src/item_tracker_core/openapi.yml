@@ -8,9 +8,9 @@ paths:
   /users:
     get:
       description: if user marked public, returns the users contact info
-      operationId: item_tracker_core.handlers.getUserByTagId
+      operationId: handlers.getUserByExternalID
       parameters:
-        - name: tag_id
+        - name: external_id
           in: query
           schema:
             type: string
@@ -27,90 +27,92 @@ paths:
                   email: 
                     type: string
                     format: email
-    post:
-      description: create new user
-      operationId: item_tracker_core.handlers.createNewUser
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        "200": 
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-  /users/{userId}:
-    get:
-      description: get user by GUID
-      operationId: item_tracker_core.handlers.getUserById
-      parameters:
-        - name: userId
-          in: path
-          description: GUID of user to update
-          required: true
-          schema:
-            type: string
-            format: GUID
-      responses:
-        "200": 
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
+        "404":
+          description: A user with the specified ID was not found.
+  #   post:
+  #     description: create new user
+  #     operationId: item_tracker_core.handlers.createNewUser
+  #     requestBody:
+  #       required: true
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/User'
+  #     responses:
+  #       "200": 
+  #         description: Created
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/User'
+  # /users/{userId}:
+  #   get:
+  #     description: get user by GUID
+  #     operationId: item_tracker_core.handlers.getUserById
+  #     parameters:
+  #       - name: userId
+  #         in: path
+  #         description: GUID of user to update
+  #         required: true
+  #         schema:
+  #           type: string
+  #           format: GUID
+  #     responses:
+  #       "200": 
+  #         description: OK
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/User'
               
 
-    patch:
-      description: update existing user
-      operationId: item_tracker_core.handlers.updateUserById
-      parameters:
-        - name: userId
-          in: path
-          description: GUID of user to update
-          required: true
-          schema:
-            type: string
-            format: GUID
-      requestBody:
-        required: true
-        content:
-          application'json:
-            schema:
-              $ref: '#/components/schemas/User'
-      responses:
-        "200": 
-          description: Updated
+  #   patch:
+  #     description: update existing user
+  #     operationId: item_tracker_core.handlers.updateUserById
+  #     parameters:
+  #       - name: userId
+  #         in: path
+  #         description: GUID of user to update
+  #         required: true
+  #         schema:
+  #           type: string
+  #           format: GUID
+  #     requestBody:
+  #       required: true
+  #       content:
+  #         application'json:
+  #           schema:
+  #             $ref: '#/components/schemas/User'
+  #     responses:
+  #       "200": 
+  #         description: Updated
 
 
       
-  /tag:
-    post:
-      description: Adds tag associated to logged in user
-      operationId: item_tracker_core.handlers.add_tag
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                item_name:
-                  type: string
-                item_desc:
-                  type: string
-      responses:
-        "200":
-          description: 200 ok
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  item_id:
-                    type: string
+  # /tag:
+  #   post:
+  #     description: Adds tag associated to logged in user
+  #     operationId: item_tracker_core.handlers.add_tag
+  #     requestBody:
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: object
+  #             properties:
+  #               item_name:
+  #                 type: string
+  #               item_desc:
+  #                 type: string
+  #     responses:
+  #       "200":
+  #         description: 200 ok
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  #               properties:
+  #                 item_id:
+  #                   type: string
 
 
 components:
