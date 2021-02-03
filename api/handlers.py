@@ -54,13 +54,13 @@ def createTables():
 
 
 def getUserByExternalID(external_id):
-    currentTag = session.query(Tag).get(external_id)
+    currentTag = session.query(Tag).filter(Tag.external_id==external_id).first()
     user = session.query(User).get(currentTag.user_id)
     print(user.name)
     return {"phone":user.phone_number,
             "email":user.email}
 
 app.add_api('openapi.yml')
-# app.run(port=8080)
+#app.run(port=8080)
 #createTables()
 # getUserByTagId(1)
