@@ -1,1 +1,1 @@
-web: gunicorn --chdir api\src\item_tracker_core handlers:app
+web: gunicorn --chdir api handlers:app
