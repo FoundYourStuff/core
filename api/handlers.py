@@ -60,6 +60,17 @@ def getUserByExternalID(external_id):
     return {"phone":user.phone_number,
             "email":user.email}
 
+def createNewUser(body):
+    print(body)
+    newUser = User(email=body['email'],
+                    name=body['name'],
+                    password=body['password'],
+                    phone_number=int(body['phone_number']),
+                    active=body['active'],
+                    contact=body['contact'])
+    session.add(newUser)
+    session.commit()
+
 app.add_api('openapi.yml')
 #app.run(port=8080)
 #createTables()

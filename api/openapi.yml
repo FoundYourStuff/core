@@ -29,22 +29,22 @@ paths:
                     format: email
         "404":
           description: A user with the specified ID was not found.
-  #   post:
-  #     description: create new user
-  #     operationId: item_tracker_core.handlers.createNewUser
-  #     requestBody:
-  #       required: true
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/User'
-  #     responses:
-  #       "200": 
-  #         description: Created
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/User'
+    post:
+      description: create new user
+      operationId: handlers.createNewUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200": 
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
   # /users/{userId}:
   #   get:
   #     description: get user by GUID
