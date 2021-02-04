@@ -72,6 +72,6 @@ def createNewUser(body):
     session.commit()
 
 app.add_api('openapi.yml')
-app.run(port=8080)
+#app.run(port=8080)
 #createTables()
 # getUserByTagId(1)
