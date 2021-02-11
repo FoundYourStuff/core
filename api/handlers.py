@@ -56,12 +56,10 @@ def createTables():
 def getUserByExternalID(external_id):
     currentTag = session.query(Tag).filter(Tag.external_id==external_id).first()
     user = session.query(User).get(currentTag.user_id)
-    print(user.name)
     return {"phone":user.phone_number,
             "email":user.email}
 
 def createNewUser(body):
-    print(body)
     newUser = User(email=body['email'],
                     name=body['name'],
                     password=body['password'],
@@ -71,7 +69,21 @@ def createNewUser(body):
     session.add(newUser)
     session.commit()
 
+def getUserByGuid(user_guid):
+    user = session.query(User).filter(User.id==user_guid).first()
+    return {"email":user.email,
+            "password":user.password,
+            "name":user.name,
+            "phone_number":user.phone_number,
+            "contact":user.contact,
+            "active":user.active}
+
+def updateUserByGuid(body, user_guid):
+    print("hello")
+    session.query(User).filter(User.id==user_guid).update({"email":body['email'], "name":body['name'], "password":body['password'],
+                                                                    "phone_number":body['phone_number'], "active":body['active'], 
+                                                                    "contact":body['contact']})
+    session.commit()
+
 app.add_api('openapi.yml')
 #app.run(port=8080)
-#createTables()
-# getUserByTagId(1)
