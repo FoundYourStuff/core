@@ -6,6 +6,7 @@ from sqlalchemy import create_engine, Table, Column, String, MetaData, Integer, 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.sql.sqltypes import Binary
 
 
 #$Env:DATABASE_URL = $(heroku config:get DATABASE_URL -a found-your-stuff-api);  py.exe handlers.py
@@ -34,7 +35,7 @@ class Tag(Base):
     __tablename__="tags"
     id = Column('id', Integer, primary_key=True)
     user_id = Column('user_id',Integer, ForeignKey("users.id"), nullable=False)
-    external_id = Column('external_id', UUID, nullable=False, default=uuid.uuid4, unique=True)
+    external_id = Column('external_id', UUID(as_uuid=True), nullable=False, default=uuid.uuid4, unique=True)
     name = Column('name', String)
     picture = Column('picture', LargeBinary)
     active = Column('active', Boolean, nullable=False)
@@ -83,6 +84,14 @@ def updateUserByGuid(body, user_guid):
     session.query(User).filter(User.id==user_guid).update({"email":body['email'], "name":body['name'], "password":body['password'],
                                                                     "phone_number":body['phone_number'], "active":body['active'], 
                                                                     "contact":body['contact']})
+    session.commit()
+
+def createNewTag(body, user_guid):
+    newTag = Tag(user_id=user_guid,
+                    name=body['name'],
+                    # picture=(body['picture']),
+                    active=body['active'])
+    session.add(newTag)
     session.commit()
 
 app.add_api('openapi.yml')

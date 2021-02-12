@@ -88,30 +88,28 @@ paths:
 
 
       
-  # /tag:
-  #   post:
-  #     description: Adds tag associated to logged in user
-  #     operationId: item_tracker_core.handlers.add_tag
-  #     requestBody:
-  #       content:
-  #         application/json:
-  #           schema:
-  #             type: object
-  #             properties:
-  #               item_name:
-  #                 type: string
-  #               item_desc:
-  #                 type: string
-  #     responses:
-  #       "200":
-  #         description: 200 ok
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 item_id:
-  #                   type: string
+  /tag:
+    post:
+      description: Creates a tag associated to the given User
+      operationId: handlers.createNewTag
+      parameters:
+        - name: user_guid
+          in: query
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+      responses:
+        "200": 
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
 
 
 components:
@@ -143,7 +141,6 @@ components:
     Tag:
       type: object
       required:
-        - user_id
         - name
         - active
       properties:
@@ -151,8 +148,9 @@ components:
           type: string
         name:
           type: string
-        picture:
-          type: string
+        # picture:
+        #   type: string
+        #   format: binary
         active:
           type: boolean
     Message:
