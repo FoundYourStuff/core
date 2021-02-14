@@ -2,11 +2,10 @@ import os
 import psycopg2
 import uuid
 import connexion
-from sqlalchemy import create_engine, Table, Column, String, MetaData, Integer, Boolean, Sequence, BigInteger, LargeBinary, ForeignKey, DateTime
+from sqlalchemy import create_engine, Table, Column, String, MetaData, Integer, Boolean, Sequence, BigInteger, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.sql.sqltypes import Binary
 
 
 #$Env:DATABASE_URL = $(heroku config:get DATABASE_URL -a found-your-stuff-api);  py.exe handlers.py
@@ -37,7 +36,7 @@ class Tag(Base):
     user_id = Column('user_id',Integer, ForeignKey("users.id"), nullable=False)
     external_id = Column('external_id', UUID(as_uuid=True), nullable=False, default=uuid.uuid4, unique=True)
     name = Column('name', String)
-    picture = Column('picture', LargeBinary)
+    picture = Column('picture', String)
     active = Column('active', Boolean, nullable=False)
 
 class Message(Base):
@@ -46,7 +45,7 @@ class Message(Base):
     tag_id = Column('tag_id',Integer, ForeignKey("tags.id"), nullable=False)
     time_stamp = Column('time_stamp', DateTime, nullable=False)
     body = Column('body', String, nullable=False)
-    picture = Column('picture', LargeBinary)
+    picture = Column('picture', String)
     read = Column('read', Boolean, nullable=False)
 
 def createTables():
@@ -89,10 +88,10 @@ def updateUserByGuid(body, user_guid):
 def createNewTag(body, user_guid):
     newTag = Tag(user_id=user_guid,
                     name=body['name'],
-                    # picture=(body['picture']),
+                    picture=body['picture'],
                     active=body['active'])
     session.add(newTag)
     session.commit()
 
 app.add_api('openapi.yml')
-#app.run(port=8080)
+#app.run(port=8080, debug=True)
