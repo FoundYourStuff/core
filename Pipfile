@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+connexion = {extras = ["swagger-ui"], version = "*"}
+serverless-wsgi = "*"
+psycopg2-binary = "*"
+gunicorn = "*"
+Flask = "*"
+Flask-SQLAlchemy = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

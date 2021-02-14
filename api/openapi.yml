@@ -1,0 +1,176 @@
+openapi: 3.0.1
+
+info:
+  title: FoundYourStuff
+  version: ""
+
+paths:
+  /contact:
+    get:
+      description: if user marked public, returns the users contact info
+      operationId: handlers.getUserByExternalID
+      parameters:
+        - name: external_id
+          in: query
+          schema:
+            type: string
+      responses:
+        "200": 
+          description: 200 ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  phone:
+                    type: integer
+                  email: 
+                    type: string
+                    format: email
+        "404":
+          description: A user with the specified tag was not found.
+  /users:
+    get:
+      description: get user info
+      operationId: handlers.getUserByGuid
+      parameters:
+        - name: user_guid
+          in: query
+          schema:
+            type: string
+      responses:
+        "200": 
+          description: 200 ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "404":
+          description: A user with the specified tag was not found.
+          
+    post:
+      description: create new user
+      operationId: handlers.createNewUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200": 
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "404":
+          description: An error occured with user creation
+    patch:
+      description: update existing user
+      operationId: handlers.updateUserByGuid
+      parameters:
+        - name: user_guid
+          in: query
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        "200": 
+          description: Updated
+        "404":
+          description: A user with the specified tag was not found.
+
+
+      
+  /tag:
+    post:
+      description: Creates a tag associated to the given User
+      operationId: handlers.createNewTag
+      parameters:
+        - name: user_guid
+          in: query
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+      responses:
+        "200": 
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - email
+        - password
+        - name
+        - phone_number
+        - contact
+        - active
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        name:
+          type: string
+        phone_number:
+          type: integer
+        contact:
+          type: boolean
+        active: 
+          type: boolean
+    Tag:
+      type: object
+      required:
+        - name
+        - active
+      properties:
+        user_id:
+          type: string
+        name:
+          type: string
+        # picture:
+        #   type: string
+        #   format: binary
+        active:
+          type: boolean
+    Message:
+      type: object
+      required:
+        - tag_id
+        - time_stamp
+        - body
+        - read
+      properties:
+        tag_id:
+          type: string
+        time_stamp:
+          type: string
+        body:
+          type: string
+        picture:
+          type: string
+        read:
+          type: boolean
+
+      
+      
