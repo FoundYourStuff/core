@@ -79,7 +79,6 @@ def getUserByGuid(user_guid):
             "active":user.active}
 
 def updateUserByGuid(body, user_guid):
-    print("hello")
     session.query(User).filter(User.id==user_guid).update({"email":body['email'], "name":body['name'], "password":body['password'],
                                                                     "phone_number":body['phone_number'], "active":body['active'], 
                                                                     "contact":body['contact']})
@@ -92,6 +91,23 @@ def createNewTag(body, user_guid):
                     active=body['active'])
     session.add(newTag)
     session.commit()
+
+def getTagById(id):
+    tag = session.query(Tag).filter(Tag.id==id).first()
+    return {"external_id":tag.external_id,
+            "name":tag.name,
+            "picture":tag.picture}
+
+def updateTagById(body, id):
+    session.query(Tag).filter(Tag.id==id).update({"name":body['name'], "picture":body['picture'],"active":body['active']})
+    session.commit()
+
+def getAllUsersTags(user_guid):
+    tags = session.query(Tag).filter(Tag.user_id==user_guid).all()
+    listOfTags = []
+    for tag in tags:
+         listOfTags.append({"external_id":tag.external_id,"name":tag.name,"picture":tag.picture})
+    return listOfTags
 
 app.add_api('openapi.yml')
 #app.run(port=8080, debug=True)

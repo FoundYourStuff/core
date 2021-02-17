@@ -28,7 +28,7 @@ paths:
                     type: string
                     format: email
         "404":
-          description: A user with the specified tag was not found.
+          description: A user with the specified ID was not found.
   /users:
     get:
       description: get user info
@@ -46,7 +46,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         "404":
-          description: A user with the specified tag was not found.
+          description: A user with the specified ID was not found.
           
     post:
       description: create new user
@@ -84,11 +84,48 @@ paths:
         "200": 
           description: Updated
         "404":
-          description: A user with the specified tag was not found.
+          description: A user with the specified ID was not found.
+  /users/tags:
+      get:
+        description: get all tags associated with a given user
+        operationId: handlers.getAllUsersTags
+        parameters:
+          - name: user_guid
+            in: query
+            schema:
+              type: string
+        responses:
+          "200": 
+            description: 200 ok
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Tag'
+          "404":
+            description: A tag with the specified ID was not found
 
 
       
-  /tag:
+  /tags:
+    get:
+      description: get a single tags info
+      operationId: handlers.getTagById
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+      responses:
+        "200": 
+          description: 200 ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        "404":
+          description: A tag with the specified ID was not found
     post:
       description: Creates a tag associated to the given User
       operationId: handlers.createNewTag
@@ -110,6 +147,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Tag'
+    patch:
+      description: update existing tag
+      operationId: handlers.updateTagById
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+      responses:
+        "200": 
+          description: Updated
+        "404":
+          description: A tag with the specified ID was not found.
 
 
 components:
@@ -148,9 +204,8 @@ components:
           type: string
         name:
           type: string
-        # picture:
-        #   type: string
-        #   format: binary
+        picture:
+          type: string
         active:
           type: boolean
     Message:
