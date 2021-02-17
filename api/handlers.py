@@ -29,6 +29,8 @@ class User(Base):
     phone_number = Column('phone_number', BigInteger)
     contact = Column('contact', Boolean, nullable=False)
     active = Column('active', Boolean, nullable=False)
+    oauth_provider = Column('oauth_provider', String)
+    oauth_id = Column('oauth_id', String)
 
 class Tag(Base):
     __tablename__="tags"
@@ -109,5 +111,6 @@ def getAllUsersTags(user_guid):
          listOfTags.append({"external_id":tag.external_id,"name":tag.name,"picture":tag.picture})
     return listOfTags
 
+createTables()
 app.add_api('openapi.yml')
-#app.run(port=8080, debug=True)
+app.run(port=8080, debug=True)
