@@ -111,6 +111,5 @@ def getAllUsersTags(user_guid):
          listOfTags.append({"external_id":tag.external_id,"name":tag.name,"picture":tag.picture})
     return listOfTags
 
-createTables()
 app.add_api('openapi.yml')
-app.run(port=8080, debug=True)
+#app.run(port=8080, debug=True)
