@@ -10,9 +10,9 @@ from sqlalchemy.dialects.postgresql import UUID
 
 #$Env:DATABASE_URL = $(heroku config:get DATABASE_URL -a found-your-stuff-api);  py.exe handlers.py
 
-if os.getenv('DATABASE_URL') is None:
+if not os.getenv('DATABASE_URL'):
     os.environ['DATABASE_URL'] = os.popen("heroku config:get DATABASE_URL -a found-your-stuff-api").read().strip() #seems jank
-DATABASE_URL = os.environ['DATABASE_URL']
+DATABASE_URL = os.getenv('DATABASE_URL')
 db = create_engine(DATABASE_URL, echo=True)
 Session = sessionmaker(bind=db)
 session = Session()
@@ -94,4 +94,8 @@ def createNewTag(body, user_guid):
     session.commit()
 
 app.add_api('openapi.yml')
-#app.run(port=8080, debug=True)
+ENV = os.getenv('FYS_WORKING_ENV')
+if ENV:
+    if ENV.lower() == 'dev':
+        os.environ['FLASK_ENV'] = 'development'
+        app.run(port=8080, debug=True)
