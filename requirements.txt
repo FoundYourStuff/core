@@ -2,3 +2,4 @@ connexion[swagger-ui]
 serverless_wsgi
 psycopg2-binary
 sqlalchemy
+alembic
