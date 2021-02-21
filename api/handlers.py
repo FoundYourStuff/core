@@ -29,8 +29,6 @@ class User(Base):
     phone_number = Column('phone_number', BigInteger)
     contact = Column('contact', Boolean, nullable=False)
     active = Column('active', Boolean, nullable=False)
-    oauth_provider = Column('oauth_provider', String)
-    oauth_id = Column('oauth_id', String)
 
 class Tag(Base):
     __tablename__="tags"
@@ -94,14 +92,14 @@ def createNewTag(body, user_guid):
     session.add(newTag)
     session.commit()
 
-def getTagById(id):
-    tag = session.query(Tag).filter(Tag.id==id).first()
+def getTagByGuid(tag_guid):
+    tag = session.query(Tag).filter(Tag.id==tag_guid).first()
     return {"external_id":tag.external_id,
             "name":tag.name,
             "picture":tag.picture}
 
-def updateTagById(body, id):
-    session.query(Tag).filter(Tag.id==id).update({"name":body['name'], "picture":body['picture'],"active":body['active']})
+def updateTagByGuid(body, tag_guid):
+    session.query(Tag).filter(Tag.id==tag_guid).update({"name":body['name'], "picture":body['picture'],"active":body['active']})
     session.commit()
 
 def getAllUsersTags(user_guid):
