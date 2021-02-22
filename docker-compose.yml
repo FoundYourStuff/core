@@ -13,6 +13,8 @@ services:
             PGDATA: /var/lib/postgresql/data/pgdata
         volumes:
             - ./pgdata:/var/lib/postgresql/data/pgdata
+        networks: 
+                - found_your_stuff_core
 
     core_deployment:
         build:
@@ -25,9 +27,18 @@ services:
             target: development
         volumes:
             - ./api:/var/app/api
+            - ./migrations:/var/app/migrations
         environment:
             - DATABASE_URL=postgres://database:database@database:5432/database
+            - FYS_WORKING_ENV=dev
+        networks: 
+                - found_your_stuff_core
+        ports:
+            - "127.0.0.1:8080:8080"
 
 networks:
   found_your_stuff_core:
     name: found_your_stuff_core
+    ipam: 
+        config: 
+            - subnet: 192.168.20.0/28

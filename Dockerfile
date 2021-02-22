@@ -28,12 +28,13 @@ RUN pip3 install -r requirements.txt
 
 ENTRYPOINT ["/sbin/tini", "--", "python3"]
 
-CMD ["api/src/item_tracker_core/handlers.py"]
+CMD ["api/handlers.py"]
 
 # <--------------STAGE--------------> development
 FROM base as development
 
 COPY requirements.txt ./
+EXPOSE 8080
 
 RUN pip3 install -r requirements.txt
 
@@ -44,7 +45,7 @@ USER nonroot
 
 ENTRYPOINT ["/sbin/tini", "--", "nodemon"]
 
-CMD ["--exec", "python3", "api/src/item_tracker_core/handlers.py"]
+CMD ["--exec", "python3", "api/handlers.py"]
 
 # <--------------STAGE--------------> Blank Postgres
 FROM postgres:12-alpine as database

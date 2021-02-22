@@ -10,9 +10,9 @@ from sqlalchemy.dialects.postgresql import UUID
 
 #$Env:DATABASE_URL = $(heroku config:get DATABASE_URL -a found-your-stuff-api);  py.exe handlers.py
 
-if os.getenv('DATABASE_URL') is None:
+if not os.getenv('DATABASE_URL'):
     os.environ['DATABASE_URL'] = os.popen("heroku config:get DATABASE_URL -a found-your-stuff-api").read().strip() #seems jank
-DATABASE_URL = os.environ['DATABASE_URL']
+DATABASE_URL = os.getenv('DATABASE_URL')
 db = create_engine(DATABASE_URL, echo=True)
 Session = sessionmaker(bind=db)
 session = Session()
@@ -79,7 +79,6 @@ def getUserByGuid(user_guid):
             "active":user.active}
 
 def updateUserByGuid(body, user_guid):
-    print("hello")
     session.query(User).filter(User.id==user_guid).update({"email":body['email'], "name":body['name'], "password":body['password'],
                                                                     "phone_number":body['phone_number'], "active":body['active'], 
                                                                     "contact":body['contact']})
@@ -93,5 +92,26 @@ def createNewTag(body, user_guid):
     session.add(newTag)
     session.commit()
 
+def getTagByGuid(tag_guid):
+    tag = session.query(Tag).filter(Tag.id==tag_guid).first()
+    return {"external_id":tag.external_id,
+            "name":tag.name,
+            "picture":tag.picture}
+
+def updateTagByGuid(body, tag_guid):
+    session.query(Tag).filter(Tag.id==tag_guid).update({"name":body['name'], "picture":body['picture'],"active":body['active']})
+    session.commit()
+
+def getAllUsersTags(user_guid):
+    tags = session.query(Tag).filter(Tag.user_id==user_guid).all()
+    listOfTags = []
+    for tag in tags:
+         listOfTags.append({"external_id":tag.external_id,"name":tag.name,"picture":tag.picture})
+    return listOfTags
+
 app.add_api('openapi.yml')
-#app.run(port=8080, debug=True)
+ENV = os.getenv('FYS_WORKING_ENV')
+if ENV:
+    if ENV.lower() == 'dev':
+        os.environ['FLASK_ENV'] = 'development'
+        app.run(port=8080, debug=True)
