@@ -24,18 +24,22 @@ FROM base as deployment
 
 COPY . /var/app/
 
+RUN export PATH="/home/nonroot/.local/bin:$PATH"
 RUN pip3 install -r requirements.txt
 
 ENTRYPOINT ["/sbin/tini", "--", "python3"]
 
-CMD ["api/handlers.py"]
+CMD ["api/__init__.py"]
 
 # <--------------STAGE--------------> development
 FROM base as development
 
 COPY requirements.txt ./
+COPY alembic.ini ./
+
 EXPOSE 8080
 
+RUN export PATH="/home/nonroot/.local/bin:$PATH"
 RUN pip3 install -r requirements.txt
 
 USER root
@@ -45,7 +49,7 @@ USER nonroot
 
 ENTRYPOINT ["/sbin/tini", "--", "nodemon"]
 
-CMD ["--exec", "python3", "api/handlers.py"]
+CMD ["--exec", "python3", "api/__init__.py"]
 
 # <--------------STAGE--------------> Blank Postgres
 FROM postgres:12-alpine as database
