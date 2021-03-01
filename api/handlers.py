@@ -60,37 +60,50 @@ def getUserByExternalID(external_id):
             "email":user.email}
 
 def createNewUser(body):
-    newUser = User(email=body['email'],
+    user = User(email=body['email'],
                     name=body['name'],
                     password=body['password'],
                     phone_number=body['phone_number'],
                     active=body['active'],
                     contact=body['contact'])
-    session.add(newUser)
+    session.add(user)
     session.commit()
+    return {"email":user.email,
+            "name":user.name,
+            "phone_number":user.phone_number,
+            "contact":user.contact,
+            "active":user.active}
 
 def getUserByGuid(user_guid):
     user = session.query(User).filter(User.id==user_guid).first()
     return {"email":user.email,
-            "password":user.password,
             "name":user.name,
             "phone_number":user.phone_number,
             "contact":user.contact,
             "active":user.active}
 
 def updateUserByGuid(body, user_guid):
-    session.query(User).filter(User.id==user_guid).update({"email":body['email'], "name":body['name'], "password":body['password'],
-                                                                    "phone_number":body['phone_number'], "active":body['active'], 
-                                                                    "contact":body['contact']})
+    user = session.query(User).filter(User.id==user_guid).first()
+    #dangerous?
+    for attribute in body:
+        setattr(user, attribute, body[attribute])
     session.commit()
+    return {"email":user.email,
+            "name":user.name,
+            "phone_number":user.phone_number,
+            "contact":user.contact,
+            "active":user.active}
 
 def createNewTag(body, user_guid):
-    newTag = Tag(user_id=user_guid,
+    tag = Tag(user_id=user_guid,
                     name=body['name'],
                     picture=body['picture'],
                     active=body['active'])
-    session.add(newTag)
+    session.add(tag)
     session.commit()
+    return {"external_id":tag.external_id,
+            "name":tag.name,
+            "picture":tag.picture}
 
 def getTagByGuid(tag_guid):
     tag = session.query(Tag).filter(Tag.id==tag_guid).first()
@@ -99,8 +112,15 @@ def getTagByGuid(tag_guid):
             "picture":tag.picture}
 
 def updateTagByGuid(body, tag_guid):
-    session.query(Tag).filter(Tag.id==tag_guid).update({"name":body['name'], "picture":body['picture'],"active":body['active']})
+    tag = session.query(Tag).filter(Tag.id==tag_guid).first()
+    #dangerous?
+    for attribute in body:
+        setattr(tag, attribute, body[attribute])
     session.commit()
+    return {"external_id":tag.external_id,
+            "name":tag.name,
+            "picture":tag.picture}
+    
 
 def getAllUsersTags(user_guid):
     tags = session.query(Tag).filter(Tag.user_id==user_guid).all()
@@ -110,6 +130,7 @@ def getAllUsersTags(user_guid):
     return listOfTags
 
 app.add_api('openapi.yml')
+app.run(port=8080, debug=True)
 ENV = os.getenv('FYS_WORKING_ENV')
 if ENV:
     if ENV.lower() == 'dev':
