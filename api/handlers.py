@@ -130,7 +130,7 @@ def getAllUsersTags(user_guid):
     return listOfTags
 
 app.add_api('openapi.yml')
-app.run(port=8080, debug=True)
+#app.run(port=8080, debug=True)
 ENV = os.getenv('FYS_WORKING_ENV')
 if ENV:
     if ENV.lower() == 'dev':
