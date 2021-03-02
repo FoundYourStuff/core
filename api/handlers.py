@@ -68,7 +68,8 @@ def createNewUser(body):
                     contact=body['contact'])
     session.add(user)
     session.commit()
-    return {"email":user.email,
+    return {"id":user.id,
+            "email":user.email,
             "name":user.name,
             "phone_number":user.phone_number,
             "contact":user.contact,
@@ -76,7 +77,8 @@ def createNewUser(body):
 
 def getUserByGuid(user_guid):
     user = session.query(User).filter(User.id==user_guid).first()
-    return {"email":user.email,
+    return {"id":user.id,
+            "email":user.email,
             "name":user.name,
             "phone_number":user.phone_number,
             "contact":user.contact,
@@ -88,7 +90,8 @@ def updateUserByGuid(body, user_guid):
     for attribute in body:
         setattr(user, attribute, body[attribute])
     session.commit()
-    return {"email":user.email,
+    return {"id":user.id,
+            "email":user.email,
             "name":user.name,
             "phone_number":user.phone_number,
             "contact":user.contact,
@@ -96,18 +99,20 @@ def updateUserByGuid(body, user_guid):
 
 def createNewTag(body, user_guid):
     tag = Tag(user_id=user_guid,
-                    name=body['name'],
-                    picture=body['picture'],
-                    active=body['active'])
+                name=body['name'],
+                picture=body['picture'],
+                active=body['active'])
     session.add(tag)
     session.commit()
-    return {"external_id":tag.external_id,
+    return {"id":tag.id,
+            "external_id":tag.external_id,
             "name":tag.name,
             "picture":tag.picture}
 
 def getTagByGuid(tag_guid):
     tag = session.query(Tag).filter(Tag.id==tag_guid).first()
-    return {"external_id":tag.external_id,
+    return {"id":tag.id,
+            "external_id":tag.external_id,
             "name":tag.name,
             "picture":tag.picture}
 
@@ -117,7 +122,8 @@ def updateTagByGuid(body, tag_guid):
     for attribute in body:
         setattr(tag, attribute, body[attribute])
     session.commit()
-    return {"external_id":tag.external_id,
+    return {"id":tag.id,
+            "external_id":tag.external_id,
             "name":tag.name,
             "picture":tag.picture}
     
@@ -126,7 +132,7 @@ def getAllUsersTags(user_guid):
     tags = session.query(Tag).filter(Tag.user_id==user_guid).all()
     listOfTags = []
     for tag in tags:
-         listOfTags.append({"external_id":tag.external_id,"name":tag.name,"picture":tag.picture})
+         listOfTags.append({"id":tag.id,"external_id":tag.external_id,"name":tag.name,"picture":tag.picture})
     return listOfTags
 
 app.add_api('openapi.yml')
