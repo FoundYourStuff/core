@@ -182,13 +182,6 @@ components:
   schemas:
     User:
       type: object
-      required:
-        - email
-        - password
-        - name
-        - phone_number
-        - contact
-        - active
       properties:
         email:
           type: string
@@ -206,9 +199,6 @@ components:
           type: boolean
     Tag:
       type: object
-      required:
-        - name
-        - active
       properties:
         user_id:
           type: string

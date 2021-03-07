@@ -1,11 +1,11 @@
 import os
-import psycopg2
 import uuid
 import connexion
 from sqlalchemy import create_engine, Table, Column, String, MetaData, Integer, Boolean, Sequence, BigInteger, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects.postgresql import UUID
+from flask_cors import CORS
 
 
 #$Env:DATABASE_URL = $(heroku config:get DATABASE_URL -a found-your-stuff-api);  py.exe handlers.py
@@ -18,6 +18,7 @@ Session = sessionmaker(bind=db)
 session = Session()
 Base = declarative_base()
 app = connexion.App(__name__, specification_dir='./')
+cors = CORS(app.app, resources={r"/*": {"origins": "localhost"}})
 
 
 class User(Base):
@@ -60,56 +61,83 @@ def getUserByExternalID(external_id):
             "email":user.email}
 
 def createNewUser(body):
-    newUser = User(email=body['email'],
+    user = User(email=body['email'],
                     name=body['name'],
                     password=body['password'],
                     phone_number=body['phone_number'],
                     active=body['active'],
                     contact=body['contact'])
-    session.add(newUser)
+    session.add(user)
     session.commit()
+    return {"id":user.id,
+            "email":user.email,
+            "name":user.name,
+            "phone_number":user.phone_number,
+            "contact":user.contact,
+            "active":user.active}
 
 def getUserByGuid(user_guid):
     user = session.query(User).filter(User.id==user_guid).first()
-    return {"email":user.email,
-            "password":user.password,
+    return {"id":user.id,
+            "email":user.email,
             "name":user.name,
             "phone_number":user.phone_number,
             "contact":user.contact,
             "active":user.active}
 
 def updateUserByGuid(body, user_guid):
-    session.query(User).filter(User.id==user_guid).update({"email":body['email'], "name":body['name'], "password":body['password'],
-                                                                    "phone_number":body['phone_number'], "active":body['active'], 
-                                                                    "contact":body['contact']})
+    user = session.query(User).filter(User.id==user_guid).first()
+    #dangerous?
+    for attribute in body:
+        setattr(user, attribute, body[attribute])
     session.commit()
+    return {"id":user.id,
+            "email":user.email,
+            "name":user.name,
+            "phone_number":user.phone_number,
+            "contact":user.contact,
+            "active":user.active}
 
 def createNewTag(body, user_guid):
-    newTag = Tag(user_id=user_guid,
-                    name=body['name'],
-                    picture=body['picture'],
-                    active=body['active'])
-    session.add(newTag)
+    tag = Tag(user_id=user_guid,
+                name=body['name'],
+                picture=body['picture'],
+                active=body['active'])
+    session.add(tag)
     session.commit()
+    return {"id":tag.id,
+            "external_id":tag.external_id,
+            "name":tag.name,
+            "picture":tag.picture}
 
 def getTagByGuid(tag_guid):
     tag = session.query(Tag).filter(Tag.id==tag_guid).first()
-    return {"external_id":tag.external_id,
+    return {"id":tag.id,
+            "external_id":tag.external_id,
             "name":tag.name,
             "picture":tag.picture}
 
 def updateTagByGuid(body, tag_guid):
-    session.query(Tag).filter(Tag.id==tag_guid).update({"name":body['name'], "picture":body['picture'],"active":body['active']})
+    tag = session.query(Tag).filter(Tag.id==tag_guid).first()
+    #dangerous?
+    for attribute in body:
+        setattr(tag, attribute, body[attribute])
     session.commit()
+    return {"id":tag.id,
+            "external_id":tag.external_id,
+            "name":tag.name,
+            "picture":tag.picture}
+    
 
 def getAllUsersTags(user_guid):
     tags = session.query(Tag).filter(Tag.user_id==user_guid).all()
     listOfTags = []
     for tag in tags:
-         listOfTags.append({"external_id":tag.external_id,"name":tag.name,"picture":tag.picture})
+         listOfTags.append({"id":tag.id,"external_id":tag.external_id,"name":tag.name,"picture":tag.picture})
     return listOfTags
 
 app.add_api('openapi.yml')
+app.run(port=8080, debug=True)
 ENV = os.getenv('FYS_WORKING_ENV')
 if ENV:
     if ENV.lower() == 'dev':
