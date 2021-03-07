@@ -1,11 +1,11 @@
 import os
-import psycopg2
 import uuid
 import connexion
 from sqlalchemy import create_engine, Table, Column, String, MetaData, Integer, Boolean, Sequence, BigInteger, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.dialects.postgresql import UUID
+from flask_cors import CORS
 
 
 #$Env:DATABASE_URL = $(heroku config:get DATABASE_URL -a found-your-stuff-api);  py.exe handlers.py
@@ -18,6 +18,7 @@ Session = sessionmaker(bind=db)
 session = Session()
 Base = declarative_base()
 app = connexion.App(__name__, specification_dir='./')
+cors = CORS(app, resources={r"/*": {"origins": "localhost"}})
 
 
 class User(Base):
@@ -136,7 +137,7 @@ def getAllUsersTags(user_guid):
     return listOfTags
 
 app.add_api('openapi.yml')
-#app.run(port=8080, debug=True)
+app.run(port=8080, debug=True)
 ENV = os.getenv('FYS_WORKING_ENV')
 if ENV:
     if ENV.lower() == 'dev':
