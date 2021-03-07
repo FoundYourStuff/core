@@ -18,7 +18,7 @@ Session = sessionmaker(bind=db)
 session = Session()
 Base = declarative_base()
 app = connexion.App(__name__, specification_dir='./')
-cors = CORS(app.app, resources={r"/*": {"origins": r"*localhost*"}})
+cors = CORS(app.app)
 
 
 class User(Base):
