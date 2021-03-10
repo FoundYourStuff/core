@@ -1,10 +1,10 @@
 # Found Your Stuff Core
 
-This is the repository for the backend API for the Found Your Stuff (FYS) item tracking system. 
+Backend API of the Found Your Stuff (FYS) project's item tracking system. 
 
 ## Status
 
-This project is in active devleopment. We try to follow [Git Flow](https://guides.github.com/introduction/flow/) and keep Master in a running state but no guarantees are made. **Running this in production is not recommended**. 
+This project is in active development. We try to follow [Git Flow](https://guides.github.com/introduction/flow/) and keep Master in a running state, but no guarantees are made. **Running this in production is not recommended**. 
 
 ## Deployment
 
@@ -13,10 +13,10 @@ This project is in active devleopment. We try to follow [Git Flow](https://guide
 The simplest way to run this application is with `docker-compose`. Please refer to the [offical instructions](https://docs.docker.com/compose/install/) to install `docker-compose`. 
 
 **Install With docker-compose**
-- clone this repository
+- Clone this repository
 - Run the docker containers with `docker-compose up -d`
-  - The iniital run will pull images (if needed) and build the development image.
-  - Ignore all warnings. **The `core_deployment` container will not start. This is a knonw bug**
+  - The initial run will pull images (if needed) and build the development image.
+  - Ignore all warnings. **The `core_deployment` container will not start. This is a known bug**
 - Check if the command succeeded with `docker ps`. You should see the following output
   ``` 
   CONTAINER ID   IMAGE                   COMMAND                  CREATED          STATUS             PORTS                      NAMES
@@ -24,8 +24,8 @@ The simplest way to run this application is with `docker-compose`. Please refer 
   5e55551a2a16   core_database           "docker-entrypoint.s…"   2 weeks ago      Up 32 minutes      5432/tcp                   core_database_
    ```
 - Run the latest migration via alembic `docker-compose exec core_development /home/nonroot/.local/bin/alembic upgrade head`. This will execute alembic in the `core_development` docker container.
-  - Look for the following output for success 
+  - Look for the following output after running to determine if the run was a success 
   ```
   INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
   INFO  [alembic.runtime.migration] Will assume transactional DDL.``` 
-- Visit `localhost:8080/ui`. If everyting wokred, you should see the Swagger UI.
+- Visit `localhost:8080/ui`. If everything worked, you should see the Swagger UI.
