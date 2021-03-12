@@ -1,1 +1,1 @@
-web: gunicorn --chdir api handlers:app
+web: gunicorn --chdir api __init__:app
