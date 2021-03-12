@@ -27,6 +27,7 @@ services:
             target: development
         volumes:
             - ./api:/var/app/api
+            - ./migrations:/var/app/migrations:rw
         environment:
             - DATABASE_URL=postgres://database:database@database:5432/database
             - FYS_WORKING_ENV=dev
