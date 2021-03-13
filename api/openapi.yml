@@ -14,7 +14,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              allOf:
+                - $ref: '#/components/schemas/User'
+                - type: object
+                  required: [email, password, name, phone_number, contact]
       responses:
         "200": 
           description: Created
@@ -101,7 +104,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Tag'
+              allOf:
+                - $ref: '#/components/schemas/Tag'
+                - type: object
+                  required: [name, picture]
       responses:
         "200": 
           description: Created
