@@ -107,7 +107,7 @@ paths:
               allOf:
                 - $ref: '#/components/schemas/Tag'
                 - type: object
-                  required: [name, picture]
+                  required: [name]
       responses:
         "200": 
           description: Created
