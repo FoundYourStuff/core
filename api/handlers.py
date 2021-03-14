@@ -24,7 +24,7 @@ def createNewUser(body):
                     name=body['name'],
                     password=body['password'],
                     phone_number=body['phone_number'],
-                    active=body['active'],
+                    active=True,
                     contact=body['contact'])
     session.add(user)
     session.commit()
