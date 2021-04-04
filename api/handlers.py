@@ -3,6 +3,7 @@ import os
 import connexion
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from flask_cors import CORS
 
 from models import User,Tag
 
@@ -12,6 +13,8 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 db = create_engine(DATABASE_URL, echo=True)
 Session = sessionmaker(bind=db)
 session = Session()
+app = connexion.App(__name__, specification_dir='./')
+cors = CORS(app.app)
 
 def getUserByExternalID(external_id):
     currentTag = session.query(Tag).filter(Tag.external_id==external_id).first()
