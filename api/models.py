@@ -5,12 +5,14 @@ import uuid
 from sqlalchemy import Table, Column, String, MetaData, Integer, Boolean, Sequence, BigInteger, ForeignKey, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import UUID
+from flask_cors import CORS
 
 
 #$Env:DATABASE_URL = $(heroku config:get DATABASE_URL -a found-your-stuff-api);  py.exe handlers.py
 
 Base = declarative_base()
 app = connexion.App(__name__, specification_dir='./')
+cors = CORS(app.app)
 
 
 class User(Base):
